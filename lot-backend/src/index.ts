@@ -7,7 +7,7 @@ import user_router from "./routes/user";
 
 // main api router and maps
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = 5000;
 
 app.use(cors());
 app.use(express.json());

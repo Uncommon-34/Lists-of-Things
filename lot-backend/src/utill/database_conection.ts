@@ -1,10 +1,11 @@
 import postgres from "postgres";
+import dotenv from "dotenv";
 
 //the database connection
 export const sql = postgres({
-  host: "192.168.7.14",
-  port: 5431,
-  database: "synoptic",
-  username: "synoptic",
-  password: "synoptic",
+  host: process.env.POSTGRES_HOST,
+  port: process.env.POSTGRES_PORT,
+  database: process.env.POSTGRES_DATABASE,
+  username: process.env.POSTGRES_USERNAME,
+  password: process.env.POSTGRES_PASSWORD,
 });

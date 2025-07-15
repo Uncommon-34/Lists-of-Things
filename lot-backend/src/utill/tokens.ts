@@ -1,15 +1,15 @@
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
 
-// functions for generating and managing tokens
-const SECRET_KEY = "sicbvsib48fgff";
+const SECRET_KEY = process.env.JWT_SECRET as string;
 
 export const generateToken = (userId: string): string => {
   return jwt.sign({ userId }, SECRET_KEY, { expiresIn: "7d" });
 };
 
-export const verifyToken = (token: string): { userId: number } | null => {
+export const verifyToken = (token: string): { userId: string } | null => {
   try {
-    return jwt.verify(token, SECRET_KEY) as { userId: number };
+    return jwt.verify(token, SECRET_KEY) as { userId: string };
   } catch (error) {
     return null;
   }

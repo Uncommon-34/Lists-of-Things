@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "build": "npm run build --prefix lot-frontend",
     "start": "concurrently \"npm run prod --prefix lot-backend\" \"npm run prod --prefix lot-frontend\"",
     "dev": "concurrently \"npm run dev --prefix lot-backend\" \"npm run dev --prefix lot-frontend\"",
     "test": "echo \"Error: no test specified\" && exit 1"

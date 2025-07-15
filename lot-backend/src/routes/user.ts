@@ -8,4 +8,6 @@ user_router.post("/login", async (req: Request, res: Response) => {});
 
 user_router.post("/create", async (req: Request, res: Response) => {});
 
+user_router.post("/me", async (req: Request, res: Response) => {});
+
 export default user_router;

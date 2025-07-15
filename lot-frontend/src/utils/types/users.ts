@@ -5,3 +5,10 @@ export type User = {
   pass_hash: string;
   created_at: string;
 };
+
+export type User_tofront = {
+  id: number;
+  username: string;
+  email: string;
+  created_at: string;
+};

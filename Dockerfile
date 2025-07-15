@@ -9,14 +9,16 @@ RUN npm install
 
 COPY . .
 
-WORKDIR /usr/src/app/backend
+WORKDIR /usr/src/app/lot-backend
 RUN npm install
 
-WORKDIR /usr/src/app/frontend
+WORKDIR /usr/src/app/lot-frontend
 RUN npm install
 
 WORKDIR /usr/src/app
 
 EXPOSE 5173
+
+run npm run build
 
 CMD ["npm", "run", "start"] 
