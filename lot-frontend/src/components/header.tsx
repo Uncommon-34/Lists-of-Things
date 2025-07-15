@@ -1,5 +1,5 @@
 import React from "react";
-import { ListCollapse } from "lucide-react";
+import { Boxes, ListCollapse } from "lucide-react";
 import { useLocation, Link } from "react-router-dom";
 
 const Header: React.FC = () => {
@@ -13,11 +13,18 @@ const Header: React.FC = () => {
     <>
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-md flex justify-around py-3 z-50">
         <Link
-          to="/Lists"
+          to="/lists"
           className={`flex flex-row items-center gap-2 ${isActive(["/lists"])}`}
         >
-          <ListCollapse className="w-13 h-13" />
+          <ListCollapse className="w-9 h-9" />
           <span className="text-base">Lists</span>
+        </Link>
+        <Link
+          to="/items"
+          className={`flex flex-row items-center gap-2 ${isActive(["/items"])}`}
+        >
+          <Boxes className="w-9 h-9" />
+          <span className="text-base">items</span>
         </Link>
       </nav>
     </>
