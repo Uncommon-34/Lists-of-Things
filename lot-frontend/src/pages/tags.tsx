@@ -1,37 +1,41 @@
 import React, { useEffect, useState } from "react";
 import { formatTimestamp } from "../utils/time";
-import type { Item } from "../utils/types/database";
+import type { Tag } from "../utils/types/database";
 
-const Items: React.FC = () => {
-  const [Items, setItems] = useState<Item[]>([]);
+type tagsWithLatest = Tag & {
+  latest_url: string;
+  latest_name: string;
+};
+
+const Tags: React.FC = () => {
+  const [Tags, setTags] = useState<tagsWithLatest[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   const token = localStorage.getItem("authToken");
 
   useEffect(() => {
-    const loadItems = async () => {
+    const loadTags = async () => {
       try {
-        const res = await fetch("/api/Items/get-all", {
+        const res = await fetch("/api/Tags/get-all", {
           method: "get",
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
         const data = await res.json();
-        setItems(data);
+        setTags(data);
       } catch (err) {
         console.error("Failed to fetch:", err);
-        setItems([
+        setTags([
           {
-            id: 5435343455,
-            link: "A awsome link",
-            name: "item name",
-            url_safe_name: "same_item_name",
-            image_url: "png_image",
-            price: "£20",
-            content: "kgfbbfgwiegf ighfiagff wfygwefg WFafge",
-            user_id: 20,
-            created_at: "5435343455",
+            id: 19823478,
+            name: "name",
+            url_safe_name: "name",
+            colour_hex: "#800080",
+            user_id: 7893496946,
+            created_at: "string;",
+            latest_url: "faaefafefe",
+            latest_name: "product one",
           },
         ]);
       } finally {
@@ -56,48 +60,46 @@ const Items: React.FC = () => {
     };
 
     loadUserId();
-    loadItems();
+    loadTags();
   }, []);
 
   return (
     <div className="min-h-screen bg-[#f0f6fb] p-4 flex flex-col items-center">
-      <h1 className="text-3xl font-bold text-[#2C7DA0] mb-6">Items</h1>
+      <h1 className="text-3xl font-bold text-[#2C7DA0] mb-6">Tags</h1>
 
       <div className="grid gap-6 max-w-4xl w-full">
         {loading && (
-          <p className="text-[#468FAF] text-center">Loading Items...</p>
+          <p className="text-[#468FAF] text-center">Loading Tags...</p>
         )}
 
-        {!loading && Items.length === 0 && (
-          <p className="text-[#468FAF] text-center">No Items found.</p>
+        {!loading && Tags.length === 0 && (
+          <p className="text-[#468FAF] text-center">No Tags found.</p>
         )}
 
-        {Items.map((Items) => (
-          <a href={`/items/${Items.user_id}/${Items.url_safe_name}`}>
+        {Tags.map((Tag) => (
+          <a href={`/tags/${Tag.user_id}/${Tag.url_safe_name}`}>
             <div
-              key={Items.url_safe_name}
+              key={Tag.url_safe_name}
               className="block bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
             >
-              {Items.image_url && (
+              {Tag.colour_hex && (
+                <div className={`bg-[${Tag.colour_hex}] p-6`} />
+              )}
+
+              {Tag.latest_url && (
                 <img
-                  src={Items.image_url}
-                  alt={Items.name}
+                  src={Tag.latest_url}
+                  alt={Tag.latest_name}
                   className="w-full h-48 p-5 object-cover"
                 />
               )}
 
               <div className="pb-6 pl-6 pr-6">
                 <h2 className="text-4xl font-semibold text-[#2C7DA0] mb-2">
-                  {Items.name}
+                  {Tag.name}
                 </h2>
-                <p className="text-gray-950 text-[1.3vh] leading-relaxed">
-                  {Items.price}
-                </p>
-                <p className="text-gray-700 text-xl leading-relaxed">
-                  {Items.content}
-                </p>
                 <p className="text-gray-700 text-sm leading-relaxed">
-                  {formatTimestamp(Items.created_at)}
+                  {formatTimestamp(Tag.created_at)}
                 </p>
               </div>
             </div>
@@ -108,4 +110,4 @@ const Items: React.FC = () => {
   );
 };
 
-export default Items;
+export default Tags;

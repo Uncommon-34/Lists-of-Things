@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from "react";
-import type { List_with_image } from "../utils/types/lists";
 import { Globe, GlobeLock } from "lucide-react";
+import type { List } from "../utils/types/database";
+import { formatTimestamp } from "../utils/time";
+
+type ListWithLatest = List & {
+  latest_url: string;
+  latest_name: string;
+};
 
 const Lists: React.FC = () => {
-  const [Lists, setLists] = useState<List_with_image[]>([]);
+  const [Lists, setLists] = useState<ListWithLatest[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [userid, setuserid] = useState<string>();
   const [copyPop, setCopyPop] = useState<boolean>(false);
@@ -29,10 +35,10 @@ const Lists: React.FC = () => {
           {
             id: 345343,
             title: "Test Title",
+            url_safe_name: "testing",
             content: "string to describe the list",
             user_id: 23234234,
-            is_private: false,
-            url_safe_name: "testing",
+            is_private: true,
             created_at: "now",
             latest_name: "last",
             latest_url: "string;",
@@ -42,6 +48,7 @@ const Lists: React.FC = () => {
         setLoading(false);
       }
     };
+
     const loadUserId = async () => {
       try {
         const res = await fetch("/api/user/validate", {
@@ -77,41 +84,51 @@ const Lists: React.FC = () => {
         )}
 
         {Lists.map((Lists) => (
-          <div
-            key={Lists.url_safe_name}
-            className="block bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
-          >
-            {Lists.latest_url && (
-              <img
-                src={Lists.latest_url}
-                alt={Lists.latest_name}
-                className="w-full h-48 object-cover"
-              />
-            )}
+          <a href={`/lists/${Lists.user_id}/${Lists.url_safe_name}`}>
+            <div
+              key={Lists.url_safe_name}
+              className="block bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
+            >
+              {Lists.latest_url && (
+                <img
+                  src={Lists.latest_url}
+                  alt={Lists.latest_name}
+                  className="w-full h-48 p-5 object-cover"
+                />
+              )}
 
-            {Lists.is_private && <GlobeLock />}
-            {!Lists.is_private && (
-              <button
-                onClick={() => {
-                  setCopyPop(true);
-                  setCopyPopContent(
-                    `${location}/lists/${userid}/${Lists.url_safe_name}`
-                  );
-                }}
-              >
-                <Globe />
-              </button>
-            )}
+              {Lists.is_private && (
+                <div className="p-5">
+                  <GlobeLock />
+                </div>
+              )}
+              {!Lists.is_private && (
+                <button
+                  onClick={() => {
+                    setCopyPop(true);
+                    setCopyPopContent(
+                      `${location}/lists/${userid}/${Lists.url_safe_name}`
+                    );
+                  }}
+                  className="p-5"
+                >
+                  <Globe />
+                </button>
+              )}
 
-            <div className="p-6">
-              <h2 className="text-4xl font-semibold text-[#2C7DA0] mb-2">
-                {Lists.title}
-              </h2>
-              <p className="text-gray-700 text-xl leading-relaxed">
-                {Lists.content}
-              </p>
+              <div className="pb-6 pl-6 pr-6">
+                <h2 className="text-4xl font-semibold text-[#2C7DA0] mb-2">
+                  {Lists.title}
+                </h2>
+                <p className="text-gray-700 text-xl leading-relaxed">
+                  {Lists.content}
+                </p>
+                <p className="text-gray-700 text-sm leading-relaxed">
+                  {formatTimestamp(Lists.created_at)}
+                </p>
+              </div>
             </div>
-          </div>
+          </a>
         ))}
       </div>
 

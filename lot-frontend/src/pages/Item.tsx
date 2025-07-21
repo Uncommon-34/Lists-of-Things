@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 const Item: React.FC = () => {
   const [loading, setLoading] = useState(true);
+  const { userid, slug } = useParams();
 
   useEffect(() => {
     const fetchFeaturedArticles = async () => {

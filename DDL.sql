@@ -1,75 +1,100 @@
--- Users table
+-- USERS TABLE
 CREATE TABLE users (
-    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    username VARCHAR(255) NOT NULL,
-    email VARCHAR(255) UNIQUE NOT NULL,
+    id BIGSERIAL PRIMARY KEY,
+    email VARCHAR(255) NOT NULL UNIQUE,
     pass_hash TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
--- Lists table
-CREATE TABLE lists (
-    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    content TEXT,
-    user_id BIGINT NOT NULL,
-    is_private BOOLEAN DEFAULT FALSE,
-    url_safe_name TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_lists_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);
+CREATE INDEX idx_users_email ON users(email);
 
--- Items table
+
+-- ITEMS TABLE
 CREATE TABLE items (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    link TEXT,
+    id BIGSERIAL PRIMARY KEY,
+    link TEXT NOT NULL,
     name TEXT NOT NULL,
+    url_safe_name TEXT NOT NULL,
     image_url TEXT,
     price TEXT,
     content TEXT,
-    list_id BIGINT NOT NULL,
     user_id BIGINT NOT NULL,
-    url_safe_name TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_items_list FOREIGN KEY (list_id) REFERENCES lists(id) ON DELETE CASCADE,
-    CONSTRAINT fk_items_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    CONSTRAINT fk_items_user_id FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
--- Indexes for performance
-CREATE INDEX IF NOT EXISTS idx_users_username ON users (username);
-CREATE INDEX IF NOT EXISTS idx_users_email ON users (email);
-CREATE INDEX IF NOT EXISTS idx_lists_user_id ON lists (user_id);
-CREATE INDEX IF NOT EXISTS idx_items_list_id ON items (list_id);
-CREATE INDEX IF NOT EXISTS idx_items_user_id ON items (user_id);
-CREATE INDEX IF NOT EXISTS idx_items_created_at ON items (created_at);
+CREATE INDEX idx_items_user_id ON items(user_id);
 
--- Function to auto-create default list and item when a user is created
-CREATE OR REPLACE FUNCTION create_default_list_and_item()
-RETURNS TRIGGER AS $$
-DECLARE
-    new_list_id BIGINT;
-BEGIN
-    INSERT INTO lists (title, content, user_id, is_private, url_safe_name)
-    VALUES ('General', 'A Default list for general items', NEW.id, TRUE, 'general')
-    RETURNING id INTO new_list_id;
 
-    INSERT INTO items (name, image_url, price, content, list_id, user_id, url_safe_name)
-    VALUES (
-        'Demo item',
-        'https://via.placeholder.com/150',
-        '£0.00',
-        'a demo item to show what it looks like',
-        new_list_id,
-        NEW.id,
-        'demo-item'
-    );
+-- LISTS TABLE
+CREATE TABLE lists (
+    id BIGSERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    url_safe_name TEXT NOT NULL,
+    content TEXT,
+    user_id BIGINT NOT NULL,
+    is_private BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    CONSTRAINT fk_lists_user_id FOREIGN KEY (user_id) REFERENCES users(id)
+);
 
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
+CREATE INDEX idx_lists_user_id ON lists(user_id);
 
--- Trigger to execute function on user insert
-CREATE TRIGGER trg_create_default_list_and_item
-AFTER INSERT ON users
-FOR EACH ROW
-EXECUTE FUNCTION create_default_list_and_item();
+
+-- TAGS TABLE
+CREATE TABLE tags (
+    id BIGSERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    url_safe_name TEXT NOT NULL,
+    colour_hex VARCHAR(7),
+    user_id BIGINT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    CONSTRAINT fk_tags_user_id FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE INDEX idx_tags_user_id ON tags(user_id);
+
+
+-- ITEM_TAG TABLE
+CREATE TABLE item_tag (
+    id BIGSERIAL PRIMARY KEY,
+    item_id BIGINT NOT NULL,
+    tag_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
+    CONSTRAINT fk_item_tag_item_id FOREIGN KEY (item_id) REFERENCES items(id),
+    CONSTRAINT fk_item_tag_tag_id FOREIGN KEY (tag_id) REFERENCES tags(id),
+    CONSTRAINT fk_item_tag_user_id FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE INDEX idx_item_tag_item_id ON item_tag(item_id);
+CREATE INDEX idx_item_tag_tag_id ON item_tag(tag_id);
+CREATE INDEX idx_item_tag_user_id ON item_tag(user_id);
+
+
+-- LIST_TAG TABLE
+CREATE TABLE list_tag (
+    id BIGSERIAL PRIMARY KEY,
+    tag_id BIGINT NOT NULL,
+    list_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
+    CONSTRAINT fk_list_tag_tag_id FOREIGN KEY (tag_id) REFERENCES tags(id),
+    CONSTRAINT fk_list_tag_list_id FOREIGN KEY (list_id) REFERENCES lists(id),
+    CONSTRAINT fk_list_tag_user_id FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+CREATE INDEX idx_list_tag_tag_id ON list_tag(tag_id);
+CREATE INDEX idx_list_tag_list_id ON list_tag(list_id);
+CREATE INDEX idx_list_tag_user_id ON list_tag(user_id);
+
+
+-- USER_ACCESS TABLE
+CREATE TABLE user_access (
+    id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    list_id BIGINT NOT NULL,
+    CONSTRAINT fk_user_access_user_id FOREIGN KEY (user_id) REFERENCES users(id),
+    CONSTRAINT fk_user_access_list_id FOREIGN KEY (list_id) REFERENCES lists(id)
+);
+
+CREATE INDEX idx_user_access_user_id ON user_access(user_id);
+CREATE INDEX idx_user_access_list_id ON user_access(list_id);

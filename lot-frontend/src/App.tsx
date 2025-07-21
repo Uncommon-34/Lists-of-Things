@@ -7,6 +7,7 @@ import List from "./pages/list";
 import Item from "./pages/Item";
 import Items from "./pages/Items";
 import Create from "./pages/Create";
+import Tags from "./pages/tags";
 
 const App: React.FC = () => {
   return (
@@ -18,9 +19,11 @@ const App: React.FC = () => {
           <Route path="/" element={<Login />} />
           <Route path="/lists" element={<Lists />} />
           <Route path="/items" element={<Items />} />
+          <Route path="/tags" element={<Tags />} />
           <Route path="/login" element={<Login />} />
           <Route path="/lists/:userid/:slug" element={<List />} />
           <Route path="/items/:userid/:slug" element={<Item />} />
+          <Route path="/tags/:userid/:slug" element={<Item />} />
           <Route path="/create" element={<Create />} />
 
           <Route path="*" element={<Login />} />

@@ -1,13 +1,16 @@
 import React from "react";
-import { Boxes, ListCollapse } from "lucide-react";
+import { Boxes, ListCollapse, Tag } from "lucide-react";
 import { useLocation, Link } from "react-router-dom";
 
 const Header: React.FC = () => {
   const location = useLocation();
   const current = location.pathname;
+  console.log(current);
 
   const isActive = (paths: string[]) =>
-    paths.includes(current) ? "text-black" : "text-gray-400";
+    paths.some((path) => current.startsWith(path))
+      ? "text-black"
+      : "text-gray-400";
 
   return (
     <>
@@ -24,7 +27,14 @@ const Header: React.FC = () => {
           className={`flex flex-row items-center gap-2 ${isActive(["/items"])}`}
         >
           <Boxes className="w-9 h-9" />
-          <span className="text-base">items</span>
+          <span className="text-base">Items</span>
+        </Link>
+        <Link
+          to="/tags"
+          className={`flex flex-row items-center gap-2 ${isActive(["/tags"])}`}
+        >
+          <Tag className="w-9 h-9" />
+          <span className="text-base">Tags</span>
         </Link>
       </nav>
     </>
