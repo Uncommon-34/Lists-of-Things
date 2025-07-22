@@ -19,21 +19,21 @@ const Header: React.FC = () => {
           to="/lists"
           className={`flex flex-row items-center gap-2 ${isActive(["/lists"])}`}
         >
-          <ListCollapse className="w-9 h-9" />
+          <ListCollapse className="w-6 h-6" />
           <span className="text-base">Lists</span>
         </Link>
         <Link
           to="/items"
           className={`flex flex-row items-center gap-2 ${isActive(["/items"])}`}
         >
-          <Boxes className="w-9 h-9" />
+          <Boxes className="w-6 h-6" />
           <span className="text-base">Items</span>
         </Link>
         <Link
           to="/tags"
           className={`flex flex-row items-center gap-2 ${isActive(["/tags"])}`}
         >
-          <Tag className="w-9 h-9" />
+          <Tag className="w-6 h-6" />
           <span className="text-base">Tags</span>
         </Link>
       </nav>
