@@ -21,7 +21,7 @@ type ListWithItems = List & {
   items: Item[];
 };
 
-const List: React.FC = () => {
+const Listpage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const { userid, slug } = useParams();
   const [list, setList] = useState<ListWithItems>({
@@ -37,7 +37,7 @@ const List: React.FC = () => {
         id: 424242,
         name: "jnvisvosnv",
         url_safe_name: "visnivsv",
-        colour_hex: "#000",
+        colour_hex: "800080",
         user_id: 20,
         created_at: "iwhbhv",
       },
@@ -45,7 +45,7 @@ const List: React.FC = () => {
         id: 424242,
         name: "jnvisvosnv2",
         url_safe_name: "visnivsv",
-        colour_hex: "#000",
+        colour_hex: "B39EB5",
         user_id: 20,
         created_at: "iwhbhv",
       },
@@ -84,7 +84,8 @@ const List: React.FC = () => {
         link: "A awsome link",
         name: "item name",
         url_safe_name: "same_item_name",
-        image_url: "png_image",
+        image_url:
+          "https://photo.uncommmon.dev/i/b2d0a833-cff8-4e31-b530-5cf2248bf80b.jpg",
         price: "£20",
         content: "kgfbbfgwiegf ighfiagff wfygwefg WFafge",
         user_id: 20,
@@ -95,7 +96,8 @@ const List: React.FC = () => {
         link: "A awsome link",
         name: "item name",
         url_safe_name: "same_item_name",
-        image_url: "png_image",
+        image_url:
+          "https://photo.uncommmon.dev/i/b2d0a833-cff8-4e31-b530-5cf2248bf80b.jpg",
         price: "£20",
         content: "kgfbbfgwiegf ighfiagff wfygwefg WFafge",
         user_id: 20,
@@ -219,27 +221,27 @@ const List: React.FC = () => {
                 <h2 className="text-4xl font-semibold text-[#2C7DA0] mb-2">
                   {list.title}
                 </h2>
-                {list.is_private && (
-                  <div className="flex items-center">
-                    <GlobeLock />
-                  </div>
-                )}
-                {!list.is_private && (
-                  <button
-                    onClick={() => {
-                      setCopyPop(true);
-                      setCopyPopContent(
-                        `${location}/lists/${list.owner.id}/${list.url_safe_name}`
-                      );
-                    }}
-                    className="flex items-center"
-                  >
-                    <Globe />
-                  </button>
-                )}
                 {list.owner.id === list.current_user.id &&
                   list.other_accsess && (
                     <>
+                      {list.is_private && (
+                        <div className="flex items-center">
+                          <GlobeLock />
+                        </div>
+                      )}
+                      {!list.is_private && (
+                        <button
+                          onClick={() => {
+                            setCopyPop(true);
+                            setCopyPopContent(
+                              `${location}/lists/${list.owner.id}/${list.url_safe_name}`
+                            );
+                          }}
+                          className="flex items-center"
+                        >
+                          <Globe />
+                        </button>
+                      )}
                       {list.other_accsess && (
                         <button
                           onClick={() => setUserAccsessPop(true)}
@@ -264,12 +266,33 @@ const List: React.FC = () => {
                 <p className="pt-3 pb-3 text-gray-700 text-xl leading-relaxed">
                   {list.content}
                 </p>
+                {list.owner.id === list.current_user.id &&
+                  list.other_accsess && (
+                    <div className="inline-flex items-center gap-5 pb-5">
+                      <h5 className="text-2xl">TAG'S</h5>
+                      {list.tags.map((tag) => (
+                        <a
+                          key={`${tag.id}`}
+                          href={`/tags/${tag.user_id}/${tag.url_safe_name}`}
+                          className="flex items-center"
+                        >
+                          <h6
+                            style={{ backgroundColor: `#${tag.colour_hex}` }}
+                            className="px-3 py-2 text-2xl text-gray-900 rounded-full hover:shadow-xl transition"
+                          >
+                            {tag.name}
+                          </h6>
+                        </a>
+                      ))}
+                    </div>
+                  )}
                 <p className="text-gray-700 text-sm leading-relaxed">
                   {formatTimestamp(list.created_at)}
                 </p>
               </div>
             </div>
           </section>
+
           <section className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-4 gap-6 pb-20 pt-10">
             {loading && (
               <p className="text-[#468FAF] text-center col-span-full">
@@ -366,15 +389,13 @@ const List: React.FC = () => {
             className="absolute inset-0 bg-black opacity-50"
             onClick={() => setUserAccsessPop(false)}
           ></div>
-
           <div className="bg-white rounded-xl p-6 w-full max-w-sm shadow-lg relative z-60">
             <button
               onClick={() => setUserAccsessPop(false)}
               className="absolute top-2 right-3 text-gray-500 hover:text-black text-lg"
             >
-              <X />
+              <X />-
             </button>
-
             <h2 className="text-xl font-bold text-[#2C7DA0] mb-4">
               {userAccsessMsg}
             </h2>
@@ -428,4 +449,4 @@ const List: React.FC = () => {
   );
 };
 
-export default List;
+export default Listpage;

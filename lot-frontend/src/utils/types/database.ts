@@ -21,7 +21,7 @@ export type List = {
   id: number;
   title: string;
   url_safe_name: string;
-  content?: string | null;
+  content: string | null;
   user_id: number;
   is_private: boolean;
   created_at: string;

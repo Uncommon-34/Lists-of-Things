@@ -3,11 +3,12 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./components/header";
 import Login from "./pages/login";
 import Lists from "./pages/lists";
-import List from "./pages/list";
-import Item from "./pages/Item";
 import Items from "./pages/Items";
 import Create from "./pages/Create";
 import Tags from "./pages/tags";
+import Listpage from "./pages/list";
+import Tagpage from "./pages/tag";
+import Itempage from "./pages/Item";
 
 const App: React.FC = () => {
   return (
@@ -21,9 +22,9 @@ const App: React.FC = () => {
           <Route path="/items" element={<Items />} />
           <Route path="/tags" element={<Tags />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/lists/:userid/:slug" element={<List />} />
-          <Route path="/items/:userid/:slug" element={<Item />} />
-          <Route path="/tags/:userid/:slug" element={<Item />} />
+          <Route path="/lists/:userid/:slug" element={<Listpage />} />
+          <Route path="/items/:userid/:slug" element={<Itempage />} />
+          <Route path="/tags/:userid/:slug" element={<Tagpage />} />
           <Route path="/create" element={<Create />} />
 
           <Route path="*" element={<Login />} />

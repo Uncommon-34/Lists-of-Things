@@ -31,7 +31,7 @@ const Tags: React.FC = () => {
             id: 19823478,
             name: "name",
             url_safe_name: "name",
-            colour_hex: "#800080",
+            colour_hex: "800080",
             user_id: 7893496946,
             created_at: "string;",
             latest_url: "faaefafefe",
@@ -83,7 +83,10 @@ const Tags: React.FC = () => {
               className="block bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
             >
               {Tag.colour_hex && (
-                <div className={`bg-[${Tag.colour_hex}] p-6`} />
+                <div
+                  style={{ backgroundColor: `#${Tag.colour_hex}` }}
+                  className={`p-6`}
+                />
               )}
 
               {Tag.latest_url && (
