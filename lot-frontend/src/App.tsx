@@ -26,6 +26,7 @@ const App: React.FC = () => {
           <Route path="/items/:userid/:slug" element={<Itempage />} />
           <Route path="/tags/:userid/:slug" element={<Tagpage />} />
           <Route path="/create" element={<Create />} />
+          <Route path="/user" element={<Create />} />
 
           <Route path="*" element={<Login />} />
         </Routes>

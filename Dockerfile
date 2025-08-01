@@ -1,5 +1,7 @@
-# in future i would bind all src folders and public folders to a external storage
-# instead of in the image to allow easier updateing and addition of information
+# I dont know how to make the env values a docker input sadly soooo youll need to make your own env and add then values then recompile the docker img. 
+# After i learn docker compose ill try make a compose file with these images and learn how to take env values and put them in the image. 
+# The compose will also run the postgres container and connect them.
+
 FROM node:20-slim AS base
 
 WORKDIR /usr/src/app

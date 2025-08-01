@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Globe, GlobeLock } from "lucide-react";
-import type { List } from "../utils/types/database";
+import type { List, User } from "../utils/types/database";
 import { formatTimestamp } from "../utils/time";
+
+type shared = {
+  Owner: User;
+};
 
 type ListWithLatest = List & {
   latest_url: string;
   latest_name: string;
+  shared?: shared;
 };
 
 const Lists: React.FC = () => {
@@ -42,6 +47,46 @@ const Lists: React.FC = () => {
             created_at: "now",
             latest_name: "last",
             latest_url: "string;",
+          },
+          {
+            id: 345343,
+            title: "Test Title",
+            url_safe_name: "testing",
+            content: "string to describe the list",
+            user_id: 23234234,
+            is_private: true,
+            created_at: "now",
+            latest_name: "last",
+            latest_url: "string;",
+          },
+          {
+            id: 345343,
+            title: "Test Title",
+            url_safe_name: "testing",
+            content: "string to describe the list",
+            user_id: 23234234,
+            is_private: true,
+            created_at: "now",
+            latest_name: "last",
+            latest_url: "string;",
+          },
+          {
+            id: 345343,
+            title: "Test Title",
+            url_safe_name: "testing",
+            content: "string to describe the list",
+            user_id: 23234234,
+            is_private: true,
+            created_at: "now",
+            latest_name: "last",
+            latest_url: "string;",
+            shared: {
+              Owner: {
+                id: 20,
+                email: "bjvikbvsv",
+                created_at: "string",
+              },
+            },
           },
         ]);
       } finally {
@@ -123,6 +168,11 @@ const Lists: React.FC = () => {
                 <p className="text-gray-700 text-xl leading-relaxed">
                   {Lists.content}
                 </p>
+                {Lists.shared && (
+                  <p className="text-gray-700 text-sm leading-relaxed">
+                    Owner: {Lists.shared.Owner.email}
+                  </p>
+                )}
                 <p className="text-gray-700 text-sm leading-relaxed">
                   {formatTimestamp(Lists.created_at)}
                 </p>

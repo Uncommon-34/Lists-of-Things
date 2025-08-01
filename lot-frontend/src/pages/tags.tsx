@@ -43,7 +43,7 @@ const Tags: React.FC = () => {
       }
     };
 
-    const loadUserId = async () => {
+    const validate = async () => {
       try {
         const res = await fetch("/api/user/validate", {
           method: "get",
@@ -59,7 +59,7 @@ const Tags: React.FC = () => {
       }
     };
 
-    loadUserId();
+    validate();
     loadTags();
   }, []);
 
